@@ -29,7 +29,7 @@ Graph(int V) {
 }
 void addEdge(int a, int b){
     adj[a].push_back(b);
-
+}
 void SCCUtil(int u, int bankNumber[], int low[], stack<int> *st,
                     bool stackMember[])
 {
