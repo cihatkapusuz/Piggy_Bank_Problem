@@ -13,34 +13,22 @@ public:
     list<int> *adj;
     vector <int> groups;
     vector <int> one_element_of_scc;
+    vector <int> unbreakable;
     int n_of_scc=0;
     int dfs_index = 0;
 
-    void SCCUtil(int u, int bankNumber[], int low[],
-                 stack<int> *st, bool stackMember[]);
-    Graph(int V);
-    void addEdge(int v, int w);
-    void SCC();
-};
-
-Graph::Graph(int V) {
+Graph(int V) {
 
     this->V = V;
     adj = new list<int>[V+1];
     for (int i = 0; i <=V; ++i) {
         groups.push_back(0);
-    }
-    for (int i = 0; i <=V; ++i) {
         one_element_of_scc.push_back(0);
+        unbreakable.push_back(0);
     }
 }
 
-void Graph::addEdge(int v, int w)
-{
-    adj[v].push_back(w);
-}
-
-void Graph::SCCUtil(int u, int bankNumber[], int low[], stack<int> *st,
+void SCCUtil(int u, int bankNumber[], int low[], stack<int> *st,
                     bool stackMember[])
 {
 
@@ -81,7 +69,7 @@ void Graph::SCCUtil(int u, int bankNumber[], int low[], stack<int> *st,
      }
 }
 
-void Graph::SCC()
+void SCC()
 {
     int *bankNumber = new int[V+1];
     int *low = new int[V+1];
@@ -99,7 +87,7 @@ void Graph::SCC()
             SCCUtil(i, bankNumber, low, st, stackMember);
         }
 }
-int unbreakable[100005];
+}
 int main(int argc, char* argv[]) {
     ios_base::sync_with_stdio(false);
     using namespace std;
