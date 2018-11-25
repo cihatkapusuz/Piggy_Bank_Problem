@@ -17,79 +17,81 @@ public:
     int n_of_scc=0;
     int dfs_index = 0;
 
-Graph(int V) {
+    Graph(int V) {
 
-    this->V = V;
-    adj = new list<int>[V+1];
-    for (int i = 0; i <=V; ++i) {
-        groups.push_back(0);
-        one_element_of_scc.push_back(0);
-        unbreakable.push_back(0);
+        this->V = V;
+        adj = new list<int>[V+1];
+        for (int i = 0; i <=V; ++i) {
+            groups.push_back(0);
+            one_element_of_scc.push_back(0);
+            unbreakable.push_back(0);
+        }
     }
-}
-void addEdge(int a, int b){
-    adj[a].push_back(b);
-}
-void SCCUtil(int u, int bankNumber[], int low[], stack<int> *st,
-                    bool stackMember[])
-{
+    void addEdge(int a, int b){
+        adj[a].push_back(b);
+    }
+    
+    void SCCUtil(int u, int bankNumber[], int low[], stack<int> *st, bool stackMember[]){
 
-    bankNumber[u] = low[u] = ++dfs_index;
-    st->push(u);
-    stackMember[u] = true;
+        bankNumber[u] = low[u] = ++dfs_index;
+        st->push(u);
+        stackMember[u] = true;
 
-   list<int>::iterator i;
-    for (i = adj[u].begin(); i != adj[u].end(); ++i)
-    {
-        int v = *i;
-        if (bankNumber[v] == -1)
+        list<int>::iterator i;
+        for (i = adj[u].begin(); i != adj[u].end(); ++i)
         {
-            SCCUtil(v, bankNumber, low, st, stackMember);
-            low[u] = min(low[u], low[v]);
+            int v = *i;
+            if (bankNumber[v] == -1)
+            {
+                SCCUtil(v, bankNumber, low, st, stackMember);
+                low[u] = min(low[u], low[v]);
+            }
+
+            else if (stackMember[v] == true)
+                low[u] = min(low[u], bankNumber[v]);
         }
 
-        else if (stackMember[v] == true)
-            low[u] = min(low[u], bankNumber[v]);
-    }
-
-    int w = 0;
-    if (low[u] == bankNumber[u])
-    {
-        while (st->top() != u)
+        int w = 0;
+        if (low[u] == bankNumber[u])
         {
+            while (st->top() != u)
+            {
+                w = (int) st->top();
+                groups[w]=n_of_scc;
+                stackMember[w] = false;
+                st->pop();
+            }
             w = (int) st->top();
-            groups[w]=n_of_scc;
             stackMember[w] = false;
             st->pop();
+            groups[w]=n_of_scc;
+            one_element_of_scc[n_of_scc]=w;
+            n_of_scc++;
         }
-        w = (int) st->top();
-        stackMember[w] = false;
-        st->pop();
-        groups[w]=n_of_scc;
-        one_element_of_scc[n_of_scc]=w;
-        n_of_scc++;
-     }
-}
-
-void SCC()
-{
-    int *bankNumber = new int[V+1];
-    int *low = new int[V+1];
-    bool *stackMember = new bool[V+1];
-    stack<int> *st = new stack<int>();
-    for (int i = 1; i <= V; i++)
-    {
-        bankNumber[i] = -1;
-        low[i] = -1;
-        stackMember[i] = false;
+    
     }
-    for (int i = 1; i <= V; i++)
-        if (bankNumber[i] == -1)
+
+    void SCC(){
+        
+        int *bankNumber = new int[V+1];
+        int *low = new int[V+1];
+        bool *stackMember = new bool[V+1];
+        stack<int> *st = new stack<int>();
+        for (int i = 1; i <= V; i++)
         {
-            SCCUtil(i, bankNumber, low, st, stackMember);
+            bankNumber[i] = -1;
+            low[i] = -1;
+            stackMember[i] = false;
         }
-}
-}
+        for (int i = 1; i <= V; i++)
+           if (bankNumber[i] == -1)
+           {
+                SCCUtil(i, bankNumber, low, st, stackMember);
+           }
+        
+    }
+};
+
 int main(int argc, char* argv[]) {
     ios_base::sync_with_stdio(false);
     using namespace std;
@@ -141,7 +143,5 @@ int main(int argc, char* argv[]) {
         }
     }
     myfile.close();
-
-
     return 0;
 }
