@@ -16,7 +16,7 @@ public:
     int n_of_scc=0;
     int dfs_index = 0;
 
-    void SCCUtil(int u, int disc[], int low[],
+    void SCCUtil(int u, int bankNumber[], int low[],
                  stack<int> *st, bool stackMember[]);
     Graph(int V);
     void addEdge(int v, int w);
@@ -40,11 +40,11 @@ void Graph::addEdge(int v, int w)
     adj[v].push_back(w);
 }
 
-void Graph::SCCUtil(int u, int disc[], int low[], stack<int> *st,
+void Graph::SCCUtil(int u, int bankNumber[], int low[], stack<int> *st,
                     bool stackMember[])
 {
 
-    disc[u] = low[u] = ++dfs_index;
+    bankNumber[u] = low[u] = ++dfs_index;
     st->push(u);
     stackMember[u] = true;
 
@@ -52,18 +52,18 @@ void Graph::SCCUtil(int u, int disc[], int low[], stack<int> *st,
     for (i = adj[u].begin(); i != adj[u].end(); ++i)
     {
         int v = *i;
-        if (disc[v] == -1)
+        if (bankNumber[v] == -1)
         {
-            SCCUtil(v, disc, low, st, stackMember);
+            SCCUtil(v, bankNumber, low, st, stackMember);
             low[u] = min(low[u], low[v]);
         }
 
         else if (stackMember[v] == true)
-            low[u] = min(low[u], disc[v]);
+            low[u] = min(low[u], bankNumber[v]);
     }
 
     int w = 0;
-    if (low[u] == disc[u])
+    if (low[u] == bankNumber[u])
     {
         while (st->top() != u)
         {
@@ -83,20 +83,20 @@ void Graph::SCCUtil(int u, int disc[], int low[], stack<int> *st,
 
 void Graph::SCC()
 {
-    int *disc = new int[V+1];
+    int *bankNumber = new int[V+1];
     int *low = new int[V+1];
     bool *stackMember = new bool[V+1];
     stack<int> *st = new stack<int>();
     for (int i = 1; i <= V; i++)
     {
-        disc[i] = -1;
+        bankNumber[i] = -1;
         low[i] = -1;
         stackMember[i] = false;
     }
     for (int i = 1; i <= V; i++)
-        if (disc[i] == -1)
+        if (bankNumber[i] == -1)
         {
-            SCCUtil(i, disc, low, st, stackMember);
+            SCCUtil(i, bankNumber, low, st, stackMember);
         }
 }
 int unbreakable[100005];
