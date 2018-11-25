@@ -27,6 +27,8 @@ Graph(int V) {
         unbreakable.push_back(0);
     }
 }
+void addEdge(int a, int b){
+    adj[a].push_back(b);
 
 void SCCUtil(int u, int bankNumber[], int low[], stack<int> *st,
                     bool stackMember[])
@@ -119,7 +121,7 @@ int main(int argc, char* argv[]) {
         for (j = piggy.adj[i+1].begin(); j != piggy.adj[i+1].end(); ++j)
         {
             if(piggy.groups[*j]!=piggy.groups[i+1]){
-                unbreakable[piggy.groups[*j]]=1;
+                piggy.unbreakable[piggy.groups[*j]]=1;
             }
         }
     }
@@ -127,14 +129,14 @@ int main(int argc, char* argv[]) {
     myfile.open(argv[2]);
     int broken_ones=0;
     for(int i=0; i< piggy.n_of_scc; i++){
-        if(unbreakable[i]==0){
+        if(piggy.unbreakable[i]==0){
             broken_ones++;
         }
     }
     myfile << broken_ones << " " ;
 
     for(int i=0; i< piggy.n_of_scc; i++){
-        if(unbreakable[i]==0){
+        if(piggy.unbreakable[i]==0){
                 myfile << piggy.one_element_of_scc[i] << " " ;
         }
     }
