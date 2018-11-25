@@ -8,11 +8,13 @@ using namespace std;
 class Graph
 {
 public:
+    
     int V;
     list<int> *adj;
     vector <int> groups;
     vector <int> one_element_of_scc;
     int n_of_scc=0;
+    int dfs_index = 0;
 
     void SCCUtil(int u, int disc[], int low[],
                  stack<int> *st, bool stackMember[]);
@@ -41,9 +43,6 @@ void Graph::addEdge(int v, int w)
 void Graph::SCCUtil(int u, int disc[], int low[], stack<int> *st,
                     bool stackMember[])
 {
-
-    static int dfs_index = 0;
-
 
     disc[u] = low[u] = ++dfs_index;
     st->push(u);
